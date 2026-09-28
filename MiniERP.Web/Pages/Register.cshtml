@@ -1,0 +1,40 @@
+﻿@* Pages/Register.cshtml *@
+@page
+@model MiniERP.Web.Pages.RegisterModel
+@{
+    ViewData["Title"] = "Register";
+    Layout = "_LoginLayout";
+}
+
+<div class="login-shell">
+    <div class="login-brand-panel">
+        <h1>MiniERP</h1>
+        <p>Create a test account to try out Admin, Sales, or Warehouse Staff roles.</p>
+    </div>
+    <div class="login-form-panel">
+        <div class="login-form-box">
+            <h4>Create an account</h4>
+            <form method="post">
+                <div class="mb-3">
+                    <div class="form-label">Full Name</div>
+                    <input asp-for="RegisterInput.FullName" class="form-control w-100" />
+                </div>
+                <div class="mb-3">
+                    <div class="form-label">Email</div>
+                    <input asp-for="RegisterInput.Email" class="form-control w-100" />
+                </div>
+                <div class="mb-3">
+                    <div class="form-label">Password</div>
+                    <input asp-for="RegisterInput.Password" type="password" class="form-control w-100" />
+                </div>
+                @if (Model.Message != null)
+                {
+                    <p style="color: @(Model.Success ? "var(--success)" : "var(--danger)"); font-size: 14px;">@Model.Message</p>
+                }
+
+                <button type="submit" class="btn-gold w-100 mt-2">Register</button>
+            </form>
+            <p style="margin-top: 16px; font-size: 13px;"><a href="/Index">Already have an account? Sign in</a></p>
+        </div>
+    </div>
+</div>

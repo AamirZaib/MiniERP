@@ -1,0 +1,41 @@
+﻿@* Pages/CreateOrder.cshtml *@
+@page
+@model MiniERP.Web.Pages.CreateOrderModel
+@{
+    ViewData["Title"] = "Create Order";
+}
+
+<div class="page-header">
+    <h1>Create Order</h1>
+</div>
+
+<div class="form-card">
+    <form method="post">
+        <div class="mb-3">
+            <div class="form-label">Customer</div>
+            <select asp-for="CustomerId" asp-items="Model.CustomerOptions" class="form-control w-100">
+                <option value="">-- Select customer --</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <div class="form-label">Product</div>
+            <select asp-for="ProductId" asp-items="Model.ProductOptions" class="form-control w-100">
+                <option value="">-- Select product --</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <div class="form-label">Quantity</div>
+            <input asp-for="Quantity" class="form-control w-100" />
+        </div>
+        <button type="submit" class="btn-gold w-100 mt-2">Place Order</button>
+    </form>
+
+    @if (Model.ResultMessage != null)
+    {
+        <div style="margin-top: 16px; padding: 12px 16px; border-radius: 4px; font-size: 14px;
+             background: @(Model.Success ? "#E2F4EC" : "#FBE7E7");
+             color: @(Model.Success ? "#1B7A4F" : "#A32C2C");">
+            @Model.ResultMessage
+        </div>
+    }
+</div>

@@ -1,0 +1,37 @@
+﻿@* Pages/Index.cshtml *@
+@page
+@model MiniERP.Web.Pages.IndexModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = "_LoginLayout";
+}
+
+<div class="login-shell">
+    <div class="login-brand-panel">
+        <h1>MiniERP</h1>
+        <p>Inventory, orders and reporting for growing businesses — built on .NET, run from anywhere.</p>
+    </div>
+    <div class="login-form-panel">
+        <div class="login-form-box">
+            <h4>Sign in to your account</h4>
+            <form method="post">
+                <div class="mb-3">
+                    <div class="form-label">Email</div>
+                    <input asp-for="LoginInput.Email" class="form-control w-100" placeholder="you@company.com" />
+                </div>
+                <div class="mb-3">
+                    <div class="form-label">Password</div>
+                    <input asp-for="LoginInput.Password" type="password" class="form-control w-100" />
+                </div>
+
+                @if (Model.ErrorMessage != null)
+                {
+                    <p style="color: var(--danger); font-size: 14px;">@Model.ErrorMessage</p>
+                }
+
+                <button type="submit" class="btn-gold w-100 mt-2">Sign in</button>
+            </form>
+            <p style="margin-top: 16px; font-size: 13px;"><a href="/Register">Need an account? Register</a></p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,52 @@
+﻿@* Pages/Products.cshtml *@
+@page
+@model MiniERP.Web.Pages.ProductsModel
+@{
+    ViewData["Title"] = "Products";
+}
+
+<div class="page-header">
+    <h1>Products</h1>
+</div>
+
+<div class="stat-row">
+    <div class="stat-card">
+        <div class="stat-label">Total Products</div>
+        <div class="stat-value">@Model.Products.Count</div>
+    </div>
+    <div class="stat-card warn">
+        <div class="stat-label">Low Stock Items</div>
+        <div class="stat-value">@Model.Products.Count(p => p.IsLowStock)</div>
+    </div>
+    <div class="stat-card success">
+        <div class="stat-label">Inventory Value</div>
+        <div class="stat-value">Rs. @Model.Products.Sum(p => p.Price * p.StockQuantity).ToString("N0")</div>
+    </div>
+</div>
+
+<table class="data-table">
+    <thead>
+        <tr><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model.Products)
+        {
+            <tr>
+                <td style="font-weight: 500;">@p.Name</td>
+                <td style="color: var(--text-muted);">@p.CategoryName</td>
+                <td>Rs. @p.Price.ToString("N0")</td>
+                <td>@p.StockQuantity</td>
+                <td>
+                    @if (p.IsLowStock)
+                    {
+                        <span class="badge-status badge-warn">Low Stock</span>
+                    }
+                    else
+                    {
+                        <span class="badge-status badge-ok">In Stock</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,65 @@
+﻿@* Pages/Dashboard.cshtml *@
+@page
+@model MiniERP.Web.Pages.DashboardModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="page-header">
+    <h1>Dashboard</h1>
+</div>
+@if (Model.AccessDenied)
+{
+    <div style="padding: 14px 18px; border-radius: 4px; background: #FBEFDA; color: #92650F; font-size: 14px;">
+        Reports are available to Admin users only.
+    </div>
+}
+else
+{
+    <div class="stat-row">
+        <div class="stat-card">
+            <div class="stat-label">Total Orders (all months)</div>
+            <div class="stat-value">@Model.SalesReport.Sum(s => s.OrderCount)</div>
+        </div>
+        <div class="stat-card success">
+            <div class="stat-label">Total Revenue</div>
+            <div class="stat-value">Rs. @Model.SalesReport.Sum(s => s.TotalSales).ToString("N0")</div>
+        </div>
+    </div>
+
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 320px;">
+            <h5 style="font-size: 15px; font-weight: 600; margin-bottom: 12px;">Monthly Sales</h5>
+            <table class="data-table">
+                <thead><tr><th>Month</th><th>Orders</th><th>Revenue</th></tr></thead>
+                <tbody>
+                    @foreach (var s in Model.SalesReport)
+                    {
+                        <tr>
+                            <td>@s.MonthName</td>
+                            <td>@s.OrderCount</td>
+                            <td>Rs. @s.TotalSales.ToString("N0")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div style="flex: 1; min-width: 320px;">
+            <h5 style="font-size: 15px; font-weight: 600; margin-bottom: 12px;">Top Products</h5>
+            <table class="data-table">
+                <thead><tr><th>Product</th><th>Qty Sold</th><th>Revenue</th></tr></thead>
+                <tbody>
+                    @foreach (var p in Model.TopProducts)
+                    {
+                        <tr>
+                            <td>@p.ProductName</td>
+                            <td>@p.TotalQuantitySold</td>
+                            <td>Rs. @p.TotalRevenue.ToString("N0")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

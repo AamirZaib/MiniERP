@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] — MiniERP</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <div class="sidebar-brand">MiniERP</div>
+            
+            <nav class="sidebar-nav">
+                @if (Context.Session.GetString("Roles")?.Contains("Admin") == true)
+                {
+                    <a href="/Dashboard">Dashboard</a>
+                    <a href="/Users">Users</a>
+                }
+                <a href="/Products">Products</a>
+                <a href="/Categories">Categories</a>
+                <a href="/Customers">Customers</a>
+                <a href="/CreateOrder">Create Order</a>
+            </nav>
+
+            <div class="sidebar-footer">
+                Signed in as <strong>@Context.Session.GetString("FullName")</strong><br />
+                <a href="/Logout">Log out</a>
+            </div>
+        </aside>
+        <main class="main-content">
+            @RenderBody()
+        </main>
+    </div>
+</body>
+</html>
