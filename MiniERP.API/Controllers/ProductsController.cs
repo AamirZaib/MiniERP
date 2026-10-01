@@ -90,7 +90,7 @@ namespace MiniERP.API.Controllers
                 return StatusCode(429, new { message = "AI search is temporarily unavailable due to high demand. Please try again tomorrow." });
 
             // Per-user limit
-            if (!await _rateLimitService.CanSearchAsync(userId, dailyLimit: 2))
+            if (!await _rateLimitService.CanSearchAsync(userId, dailyLimit: 5))
                 return StatusCode(429, new { message = "You've reached your daily AI search limit (5/day). Please try again tomorrow." });
 
             var result = await _aiSearchService.SearchAsync(query);

@@ -14,7 +14,7 @@ namespace MiniERP.Infrastructure.Services
 
         public RateLimitService(AppDbContext context) => _context = context;
 
-        public async Task<bool> CanSearchAsync(string userId, int dailyLimit = 2)
+        public async Task<bool> CanSearchAsync(string userId, int dailyLimit = 5)
         {
             var today = DateTime.UtcNow.Date;
             var countToday = await _context.AiSearchLogs
