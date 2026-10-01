@@ -8,6 +8,7 @@ using MiniERP.Infrastructure.AI;
 using MiniERP.Infrastructure.Data;
 using MiniERP.Infrastructure.Identity;
 using MiniERP.Infrastructure.Repositories;
+using MiniERP.Infrastructure.Services;
 using Scalar.AspNetCore;
 using System.Text;
 
@@ -57,7 +58,7 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddHttpClient<IAiSearchService, ClaudeSearchService>();
-
+builder.Services.AddScoped<IRateLimitService, RateLimitService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

@@ -117,7 +117,20 @@ namespace MiniERP.Web.Services
         public async Task<SmartSearchResponse> SmartSearchAsync(string token, string query)
         {
             SetAuthHeader(token);
-            var result = await _httpClient.GetFromJsonAsync<SmartSearchResponse>($"api/products/smart-search?query={Uri.EscapeDataString(query)}");
+            var response = await _httpClient.GetAsync($"api/products/smart-search?query={Uri.EscapeDataString(query)}");
+
+            if (response.StatusCode == System.Net.HttpStatusCode.TooManyRequests)
+            {
+                var errorBody = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>();
+                return new SmartSearchResponse
+                {
+                    Products = new(),
+                    Explanation = errorBody?.GetValueOrDefault("message") ?? "Daily search limit reached. Please try again tomorrow."
+                };
+            }
+
+            response.EnsureSuccessStatusCode();
+            var result = await response.Content.ReadFromJsonAsync<SmartSearchResponse>();
             return result ?? new();
         }
         public record RegisterResult(bool Success, string? ErrorMessage);

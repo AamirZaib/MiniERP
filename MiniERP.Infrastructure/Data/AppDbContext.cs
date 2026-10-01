@@ -17,7 +17,7 @@ namespace MiniERP.Infrastructure.Data
         public DbSet<Customer> Customers => Set<Customer>();
         public DbSet<Order> Orders => Set<Order>();
         public DbSet<OrderItem> OrderItems => Set<OrderItem>();
-
+        public DbSet<AiSearchLog> AiSearchLogs => Set<AiSearchLog>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
