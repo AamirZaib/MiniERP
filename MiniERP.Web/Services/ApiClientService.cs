@@ -114,6 +114,12 @@ namespace MiniERP.Web.Services
             var error = await response.Content.ReadFromJsonAsync<List<string>>();
             return new RegisterResult(false, error != null ? string.Join(", ", error) : "Failed to create user.");
         }
+        public async Task<SmartSearchResponse> SmartSearchAsync(string token, string query)
+        {
+            SetAuthHeader(token);
+            var result = await _httpClient.GetFromJsonAsync<SmartSearchResponse>($"api/products/smart-search?query={Uri.EscapeDataString(query)}");
+            return result ?? new();
+        }
         public record RegisterResult(bool Success, string? ErrorMessage);
     }
 }

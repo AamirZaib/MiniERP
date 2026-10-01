@@ -23,6 +23,18 @@
         <div class="stat-value">Rs. @Model.Products.Sum(p => p.Price * p.StockQuantity).ToString("N0")</div>
     </div>
 </div>
+<form method="post" asp-page-handler="Search" style="margin-bottom: 20px; display: flex; gap: 10px;">
+    <input name="SearchQuery" class="form-control" placeholder="Try: 'cheap electronics with low stock'" style="flex: 1;" />
+    <button type="submit" class="btn-gold">AI Search</button>
+</form>
+
+@if (Model.AiExplanation != null)
+{
+    <div style="padding: 10px 16px; background: #EEF3FA; border-radius: 4px; margin-bottom: 16px; font-size: 14px; color: var(--navy);">
+        🤖 @Model.AiExplanation
+    </div>
+}
+
 
 <table class="data-table">
     <thead>

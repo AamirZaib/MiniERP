@@ -11,10 +11,12 @@ namespace MiniERP.API.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IAiSearchService _aiSearchService;
 
-        public ProductsController(IUnitOfWork unitOfWork)
+        public ProductsController(IUnitOfWork unitOfWork, IAiSearchService aiSearchService)
         {
             _unitOfWork = unitOfWork;
+            _aiSearchService = aiSearchService;
         }
 
         [HttpGet]
@@ -71,6 +73,15 @@ namespace MiniERP.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = product.Id }, response);
         }
 
+        [HttpGet("smart-search")]
+        public async Task<IActionResult> SmartSearch([FromQuery] string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+                return BadRequest(new { message = "Query is required." });
+
+            var result = await _aiSearchService.SearchAsync(query);
+            return Ok(result);
+        }
         private static ProductResponse MapToResponse(Product product)
         {
             return new ProductResponse
@@ -86,5 +97,6 @@ namespace MiniERP.API.Controllers
                 CategoryName = product.Category?.Name ?? string.Empty
             };
         }
+
     }
 }

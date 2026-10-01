@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MiniERP.Application.Interfaces;
 using MiniERP.Application.Services;
+using MiniERP.Infrastructure.AI;
 using MiniERP.Infrastructure.Data;
 using MiniERP.Infrastructure.Identity;
 using MiniERP.Infrastructure.Repositories;
@@ -55,6 +56,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddHttpClient<IAiSearchService, ClaudeSearchService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
