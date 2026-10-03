@@ -1,4 +1,14 @@
 <Solution>
+  <Folder Name="/screenshots/">
+    <File Path="C:/Users/Aamir zaib/Desktop/Aamir personal/ai-search.png" />
+    <File Path="C:/Users/Aamir zaib/Desktop/Aamir personal/ai-search1.png" />
+    <File Path="C:/Users/Aamir zaib/Desktop/Aamir personal/audit-logs.png" />
+    <File Path="C:/Users/Aamir zaib/Desktop/Aamir personal/Dashboard.png" />
+    <File Path="C:/Users/Aamir zaib/Desktop/Aamir personal/Invoicepdf.png" />
+    <File Path="C:/Users/Aamir zaib/Desktop/Aamir personal/Notification.png" />
+    <File Path="C:/Users/Aamir zaib/Desktop/Aamir personal/Orders.png" />
+    <File Path="C:/Users/Aamir zaib/Desktop/Aamir personal/products.png" />
+  </Folder>
   <Project Path="MiniERP.API/MiniERP.API.csproj" />
   <Project Path="MiniERP.Application/MiniERP.Application.csproj" />
   <Project Path="MiniERP.Domain/MiniERP.Domain.csproj" />

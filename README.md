@@ -80,6 +80,29 @@ graph TD
 
 ---
 
+## Screenshots
+
+### Dashboard
+![Dashboard](screenshots/dashboard.png)
+
+### Products
+![Products](screenshots/products.png)
+
+### AI Smart Search
+![AI Search](screenshots/ai-search.png)
+![AI Search](screenshots/ai-search1.png)
+
+### Audit Logs
+![Dashboard](screenshots/audit-logs.png)
+
+### Invoice PDF
+![Products](screenshots/Invoicepdf.png)
+
+### Notification
+![AI Search](screenshots/Notification.png)
+
+---
+
 ## Security Notes
 
 - Domain entities are never serialized directly to API responses — all responses pass through DTOs, preventing both circular-reference bugs and accidental data exposure.
