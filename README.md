@@ -85,12 +85,12 @@ graph TD
 ### Dashboard
 ![Dashboard](screenshots/dashboard.png)
 
-### Products
-![Products](screenshots/products.png)
-
 ### AI Smart Search
 ![AI Search](screenshots/ai-search.png)
 ![AI Search](screenshots/ai-search1.png)
+
+### Products
+![Products](screenshots/products.png)
 
 ### Audit Logs
 ![Audit Logs](screenshots/audit-logs.png)
