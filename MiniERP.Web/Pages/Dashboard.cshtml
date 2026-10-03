@@ -27,6 +27,56 @@ else
         </div>
     </div>
 
+    <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 24px;">
+        <div style="flex: 1; min-width: 320px; background: #fff; border: 1px solid var(--border); border-radius: 4px; padding: 20px;">
+            <h5 style="font-size: 15px; font-weight: 600; margin-bottom: 16px;">Monthly Sales Trend</h5>
+            <canvas id="salesChart" height="200"></canvas>
+        </div>
+        <div style="flex: 1; min-width: 320px; background: #fff; border: 1px solid var(--border); border-radius: 4px; padding: 20px;">
+            <h5 style="font-size: 15px; font-weight: 600; margin-bottom: 16px;">Top Products (by Qty Sold)</h5>
+            <canvas id="productsChart" height="200"></canvas>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script>
+        const salesLabels = [@Html.Raw(string.Join(",", Model.SalesReport.Select(s => $"'{s.MonthName}'")))];
+        const salesData = [@Html.Raw(string.Join(",", Model.SalesReport.Select(s => s.TotalSales)))];
+
+        new Chart(document.getElementById('salesChart'), {
+            type: 'line',
+            data: {
+                labels: salesLabels,
+                datasets: [{
+                    label: 'Sales (Rs.)',
+                    data: salesData,
+                    borderColor: '#D9A441',
+                    backgroundColor: 'rgba(217, 164, 65, 0.1)',
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: { plugins: { legend: { display: false } } }
+        });
+
+        const productLabels = [@Html.Raw(string.Join(",", Model.TopProducts.Select(p => $"'{p.ProductName}'")))];
+        const productData = [@Html.Raw(string.Join(",", Model.TopProducts.Select(p => p.TotalQuantitySold)))];
+
+        new Chart(document.getElementById('productsChart'), {
+            type: 'bar',
+            data: {
+                labels: productLabels,
+                datasets: [{
+                    label: 'Qty Sold',
+                    data: productData,
+                    backgroundColor: '#1F3864'
+                }]
+            },
+            options: { plugins: { legend: { display: false } } }
+        });
+    </script>
+
+
     <div style="display: flex; gap: 20px; flex-wrap: wrap;">
         <div style="flex: 1; min-width: 320px;">
             <h5 style="font-size: 15px; font-weight: 600; margin-bottom: 12px;">Monthly Sales</h5>
