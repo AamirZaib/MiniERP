@@ -93,13 +93,13 @@ graph TD
 ![AI Search](screenshots/ai-search1.png)
 
 ### Audit Logs
-![Dashboard](screenshots/audit-logs.png)
+![Audit Logs](screenshots/audit-logs.png)
 
 ### Invoice PDF
-![Products](screenshots/Invoicepdf.png)
+![Invoice PDF](screenshots/Invoicepdf.png)
 
 ### Notification
-![AI Search](screenshots/Notification.png)
+![Notification](screenshots/Notification.png)
 
 ---
 
