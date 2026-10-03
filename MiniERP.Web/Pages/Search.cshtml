@@ -1,0 +1,88 @@
+﻿@* Pages/Search.cshtml *@
+@page
+@model MiniERP.Web.Pages.SearchModel
+@{
+    ViewData["Title"] = "Search";
+}
+
+<div class="page-header">
+    <h1>AI Search</h1>
+</div>
+
+<form method="get" style="display: flex; gap: 10px; margin-bottom: 20px;">
+    <input name="q" value="@Model.Query" class="form-control" style="flex: 1;"
+           placeholder="Try: 'orders from Ali Khan' or 'low stock electronics' or 'customers named Ali'" />
+    <button type="submit" class="btn-gold">Search</button>
+</form>
+
+@if (Model.Result != null)
+{
+    <div class="ai-insight-box">
+        <div class="ai-insight-icon">🤖</div>
+        <div class="ai-insight-content">
+            <div class="ai-insight-label">AI Insight</div>
+            <div class="ai-insight-text">@Model.Result.Explanation</div>
+        </div>
+    </div>
+
+    @if (Model.Result.Products.Any())
+    {
+        <h5>Products</h5>
+        <table class="data-table" style="margin-bottom: 24px;">
+            <thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Stock</th></tr></thead>
+            <tbody>
+                @foreach (var p in Model.Result.Products)
+                {
+                    <tr><td>@p.Name</td><td>@p.CategoryName</td><td>Rs. @p.Price.ToString("N0")</td><td>@p.StockQuantity</td></tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    @if (Model.Result.Customers.Any())
+    {
+        <h5>Customers</h5>
+        <table class="data-table" style="margin-bottom: 24px;">
+            <thead><tr><th>Name</th><th>Email</th><th>Phone</th></tr></thead>
+            <tbody>
+                @foreach (var c in Model.Result.Customers)
+                {
+                    <tr><td>@c.Name</td><td>@c.Email</td><td>@(c.Phone ?? "—")</td></tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    @if (Model.Result.Orders.Any())
+    {
+        <h5>Orders</h5>
+        <table class="data-table" style="margin-bottom: 24px;">
+            <thead><tr><th>Order #</th><th>Customer</th><th>Status</th><th>Total</th><th>Date</th></tr></thead>
+            <tbody>
+                @foreach (var o in Model.Result.Orders)
+                {
+                    <tr><td>#@o.Id</td><td>@o.CustomerName</td><td>@o.Status</td><td>Rs. @o.TotalAmount.ToString("N0")</td><td>@o.OrderDate.ToString("yyyy-MM-dd")</td></tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    @if (Model.Result.Categories.Any())
+    {
+        <h5>Categories</h5>
+        <table class="data-table">
+            <thead><tr><th>Name</th></tr></thead>
+            <tbody>
+                @foreach (var c in Model.Result.Categories)
+                {
+                    <tr><td>@c.Name</td></tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    @if (!Model.Result.Products.Any() && !Model.Result.Customers.Any() && !Model.Result.Orders.Any() && !Model.Result.Categories.Any())
+    {
+        <p style="color: var(--text-muted);">No matches found.</p>
+    }
+}

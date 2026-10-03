@@ -33,5 +33,19 @@ namespace MiniERP.API.Controllers
 
             return Ok(new CategoryResponse { Id = category.Id, Name = category.Name });
         }
+        // CategoriesController.cs mein add karein
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Update(int id, UpdateCategoryRequest request)
+        {
+            var category = await _unitOfWork.Categories.GetByIdAsync(id);
+            if (category == null) return NotFound();
+
+            category.Name = request.Name;
+            _unitOfWork.Categories.Update(category);
+            await _unitOfWork.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }

@@ -1,0 +1,38 @@
+﻿@* Pages/EditSupplier.cshtml *@
+@page "{id:int}"
+@model MiniERP.Web.Pages.EditSupplierModel
+@{
+    ViewData["Title"] = "Edit Supplier";
+}
+
+<div class="page-header">
+    <h1>Edit Supplier</h1>
+</div>
+
+<div class="form-card">
+    <form method="post">
+        <input type="hidden" asp-for="Id" />
+        <div class="mb-3">
+            <div class="form-label">Name</div>
+            <input asp-for="Supplier.Name" class="form-control w-100" />
+        </div>
+        <div class="mb-3">
+            <div class="form-label">Contact Person</div>
+            <input asp-for="Supplier.ContactPerson" class="form-control w-100" />
+        </div>
+        <div class="mb-3">
+            <div class="form-label">Email</div>
+            <input asp-for="Supplier.Email" class="form-control w-100" />
+        </div>
+        <div class="mb-3">
+            <div class="form-label">Phone</div>
+            <input asp-for="Supplier.Phone" class="form-control w-100" />
+        </div>
+        <button type="submit" class="btn-gold w-100 mt-2">Save Changes</button>
+    </form>
+
+    @if (Model.Message != null)
+    {
+        <p style="color: var(--danger); font-size: 13px; margin-top: 10px;">@Model.Message</p>
+    }
+</div>

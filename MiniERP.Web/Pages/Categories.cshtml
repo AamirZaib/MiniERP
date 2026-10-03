@@ -12,11 +12,11 @@
 <div style="display: flex; gap: 24px; flex-wrap: wrap;">
     <div style="flex: 2; min-width: 300px;">
         <table class="data-table">
-            <thead><tr><th>Id</th><th>Name</th></tr></thead>
+            <thead><tr><th>Id</th><th>Name</th><th>Action</th></tr></thead>
             <tbody>
                 @foreach (var c in Model.Categories)
                 {
-                    <tr><td>@c.Id</td><td>@c.Name</td></tr>
+                    <tr><td>@c.Id</td><td>@c.Name</td><td><a href="/EditCategory/@c.Id" class="btn-gold" style="padding: 4px 12px; font-size: 13px; text-decoration: none; display: inline-block;">Edit</a></td></tr>
                 }
             </tbody>
         </table>

@@ -59,6 +59,11 @@ builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddHttpClient<IAiSearchService, ClaudeSearchService>();
 builder.Services.AddScoped<IRateLimitService, RateLimitService>();
+builder.Services.AddHttpClient<IGlobalSearchService, GlobalSearchService>();
+builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
+builder.Services.AddScoped<IInvoiceService, InvoiceService>();
+builder.Services.AddScoped<IAuditService, AuditService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

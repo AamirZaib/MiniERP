@@ -1,0 +1,48 @@
+﻿@* Pages/EditProduct.cshtml *@
+@page "{id:int}"
+@model MiniERP.Web.Pages.EditProductModel
+@{
+    ViewData["Title"] = "Edit Product";
+}
+
+<div class="page-header">
+    <h1>Edit Product</h1>
+</div>
+
+<div class="form-card">
+    <form method="post">
+        <input type="hidden" asp-for="Id" />
+        <div class="mb-3">
+            <div class="form-label">Name</div>
+            <input asp-for="Product.Name" class="form-control w-100" />
+        </div>
+        <div class="mb-3">
+            <div class="form-label">Description</div>
+            <input asp-for="Product.Description" class="form-control w-100" />
+        </div>
+        <div class="mb-3">
+            <div class="form-label">Category</div>
+            <select asp-for="Product.CategoryId" asp-items="Model.CategoryOptions" class="form-control w-100"></select>
+        </div>
+        <div style="display: flex; gap: 12px;">
+            <div class="mb-3" style="flex: 1;">
+                <div class="form-label">Price (Rs.)</div>
+                <input asp-for="Product.Price" class="form-control w-100" />
+            </div>
+            <div class="mb-3" style="flex: 1;">
+                <div class="form-label">Stock Quantity</div>
+                <input asp-for="Product.StockQuantity" class="form-control w-100" />
+            </div>
+            <div class="mb-3" style="flex: 1;">
+                <div class="form-label">Low Stock Threshold</div>
+                <input asp-for="Product.LowStockThreshold" class="form-control w-100" />
+            </div>
+        </div>
+        <button type="submit" class="btn-gold w-100 mt-2">Save Changes</button>
+    </form>
+
+    @if (Model.Message != null)
+    {
+        <p style="color: var(--danger); font-size: 13px; margin-top: 10px;">@Model.Message</p>
+    }
+</div>

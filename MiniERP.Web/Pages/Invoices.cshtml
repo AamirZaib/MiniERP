@@ -1,0 +1,31 @@
+﻿@* Pages/Invoices.cshtml *@
+@page
+@model MiniERP.Web.Pages.InvoicesModel
+@{
+    ViewData["Title"] = "Invoices";
+}
+
+<div class="page-header">
+    <h1>Invoices</h1>
+</div>
+
+<table class="data-table">
+    <thead>
+        <tr><th>Invoice #</th><th>Order</th><th>Issued Date</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var inv in Model.Invoices)
+        {
+            <tr>
+                <td>@inv.InvoiceNumber</td>
+                <td>#@inv.OrderId</td>
+                <td>@inv.IssuedDate.ToString("yyyy-MM-dd")</td>
+                <td>
+                    <a href="/Invoices?handler=Download&id=@inv.Id" class="btn-gold" style="padding: 4px 12px; font-size: 13px; text-decoration: none; display: inline-block;">
+                        Download PDF
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -11,14 +11,27 @@ namespace MiniERP.Application.Services
     public class OrderService : IOrderService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IAuditService _auditService;
+        private readonly INotificationService _notificationService;
 
-        public OrderService(IUnitOfWork unitOfWork)
+        public OrderService(IUnitOfWork unitOfWork, IAuditService auditService, INotificationService notificationService)
         {
             _unitOfWork = unitOfWork;
+            _auditService = auditService;
+            _notificationService = notificationService;
         }
-
-        public async Task<OrderResponse> CreateOrderAsync(CreateOrderRequest request)
+        public async Task<OrderResponse> CreateOrderAsync(CreateOrderRequest request, string userId, string userEmail)
         {
+
+            if (request.Items == null || !request.Items.Any())
+                throw new ArgumentException("Order must contain at least one item.");
+
+            foreach (var item in request.Items)
+            {
+                if (item.Quantity <= 0)
+                    throw new ArgumentException("Quantity must be greater than zero.");
+            }
+
             var customer = await _unitOfWork.Customers.GetByIdAsync(request.CustomerId)
                 ?? throw new KeyNotFoundException($"Customer with Id {request.CustomerId} not found.");
 
@@ -48,12 +61,19 @@ namespace MiniERP.Application.Services
                 // Stock kam karo — yeh business rule hai jo humesha order ke sath honi chahiye
                 product.StockQuantity -= itemRequest.Quantity;
                 _unitOfWork.Products.Update(product);
+                if (product.IsLowStock)
+                {
+                    await _notificationService.CreateLowStockNotificationAsync(product.Id, product.Name, product.StockQuantity);
+                }
             }
 
             await _unitOfWork.Orders.AddAsync(order);
 
             // Zaroori: Sab kuch ek hi SaveChangesAsync mein — agar beech mein kuch fail ho, sab rollback ho jayega
             await _unitOfWork.SaveChangesAsync();
+
+            await _auditService.LogAsync(userId, userEmail, "OrderCreated", "Order", order.Id.ToString(),
+        $"Order #{order.Id} created for {customer.Name}, Total: Rs.{order.TotalAmount}");
 
             return await MapToResponse(order.Id) ?? throw new InvalidOperationException("Order creation failed unexpectedly.");
         }
@@ -73,8 +93,7 @@ namespace MiniERP.Application.Services
             }
             return responses;
         }
-
-        public async Task UpdateOrderStatusAsync(int orderId, string newStatus)
+        public async Task UpdateOrderStatusAsync(int orderId, string newStatus, string userId, string userEmail)
         {
             var order = await _unitOfWork.Orders.GetByIdAsync(orderId)
                 ?? throw new KeyNotFoundException($"Order with Id {orderId} not found.");
@@ -97,6 +116,8 @@ namespace MiniERP.Application.Services
             order.Status = parsedStatus;
             _unitOfWork.Orders.Update(order);
             await _unitOfWork.SaveChangesAsync();
+            await _auditService.LogAsync(userId, userEmail, "OrderStatusChanged", "Order", orderId.ToString(),
+            $"Order #{orderId} status changed from {order.Status} to {parsedStatus}");
         }
 
         private async Task<OrderResponse?> MapToResponse(int orderId)

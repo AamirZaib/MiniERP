@@ -1,0 +1,37 @@
+﻿@* Pages/Notifications.cshtml *@
+@page
+@model MiniERP.Web.Pages.NotificationsModel
+@{
+    ViewData["Title"] = "Notifications";
+}
+
+<div class="page-header">
+    <h1>Notifications</h1>
+    <form method="post" asp-page-handler="MarkAllRead">
+        <button type="submit" class="btn-gold" style="padding: 6px 14px; font-size: 13px;">Mark All as Read</button>
+    </form>
+</div>
+
+<table class="data-table">
+    <thead><tr><th>Message</th><th>Type</th><th>Status</th><th>Date</th></tr></thead>
+    <tbody>
+        @foreach (var n in Model.Notifications)
+        {
+            <tr style="@(n.IsRead ? "" : "background: #FFF9EF;")">
+                <td>@n.Message</td>
+                <td>@n.Type</td>
+                <td>
+                    @if (n.IsRead)
+                    {
+                        <span class="badge-status badge-ok">Read</span>
+                    }
+                    else
+                    {
+                        <span class="badge-status badge-warn">New</span>
+                    }
+                </td>
+                <td style="color: var(--text-muted); font-size: 13px;">@n.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+            </tr>
+        }
+    </tbody>
+</table>

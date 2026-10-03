@@ -1,0 +1,10 @@
+﻿@* Pages/Shared/Components/NotificationBadge/Default.cshtml *@
+@model int
+
+@if (Model > 0)
+{
+    <span style="background: var(--danger); color: #fff; font-size: 11px; font-weight: 700;
+        padding: 1px 6px; border-radius: 10px; margin-left: 6px;">
+        @Model
+    </span>
+}

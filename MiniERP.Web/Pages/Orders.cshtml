@@ -1,0 +1,42 @@
+﻿@* Pages/Orders.cshtml *@
+@page
+@model MiniERP.Web.Pages.OrdersModel
+@{
+    ViewData["Title"] = "Orders";
+}
+
+<div class="page-header">
+    <h1>Orders</h1>
+    <a href="/CreateOrder" class="btn-gold" style="text-decoration: none;">+ Create Order</a>
+</div>
+
+@if (Model.Message != null)
+{
+    <div class="ai-insight-box" style="background: #E2F4EC; border-left-color: var(--success);">
+        <div class="ai-insight-content"><div class="ai-insight-text">@Model.Message</div></div>
+    </div>
+}
+
+
+<table class="data-table">
+    <thead>
+        <tr><th>Order #</th><th>Customer</th><th>Status</th><th>Total</th><th>Date</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var o in Model.Orders)
+        {
+            <tr>
+                <td>#@o.Id</td>
+                <td>@o.CustomerName</td>
+                <td><span class="badge-status badge-ok">@o.Status</span></td>
+                <td>Rs. @o.TotalAmount.ToString("N0")</td>
+                <td>@o.OrderDate.ToString("yyyy-MM-dd")</td>
+                <td>
+                    <form method="post" asp-page-handler="GenerateInvoice" asp-route-orderId="@o.Id" style="display:inline;">
+                        <button type="submit" class="btn-gold" style="padding: 4px 12px; font-size: 13px;">Generate Invoice</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

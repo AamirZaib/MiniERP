@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MiniERP.Application.DTOs;
 using MiniERP.Application.Interfaces;
 using MiniERP.Domain.Exceptions;
+using System.Security.Claims;
 
 namespace MiniERP.API.Controllers
 {
@@ -23,7 +25,10 @@ namespace MiniERP.API.Controllers
         {
             try
             {
-                var order = await _orderService.CreateOrderAsync(request);
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+                var userEmail = User.FindFirstValue(ClaimTypes.Email)!;
+
+                var order = await _orderService.CreateOrderAsync(request, userId, userEmail);
                 return CreatedAtAction(nameof(GetById), new { id = order.Id }, order);
             }
             catch (InsufficientStockException ex)
@@ -33,6 +38,10 @@ namespace MiniERP.API.Controllers
             catch (KeyNotFoundException ex)
             {
                 return NotFound(new { message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
             }
         }
 
@@ -56,7 +65,9 @@ namespace MiniERP.API.Controllers
         {
             try
             {
-                await _orderService.UpdateOrderStatusAsync(id, newStatus);
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+                var userEmail = User.FindFirstValue(ClaimTypes.Email)!;
+                await _orderService.UpdateOrderStatusAsync(id, newStatus, userId, userEmail);
                 return NoContent();
             }
             catch (InvalidOrderStatusTransitionException ex)

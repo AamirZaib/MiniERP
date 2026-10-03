@@ -11,18 +11,67 @@
         <aside class="sidebar">
             <div class="sidebar-brand">MiniERP</div>
             
-            <nav class="sidebar-nav">
+            @* <nav class="sidebar-nav">
                 @if (Context.Session.GetString("Roles")?.Contains("Admin") == true)
                 {
                     <a href="/Dashboard">Dashboard</a>
-                    <a href="/Users">Users</a>
                 }
                 <a href="/Products">Products</a>
                 <a href="/Categories">Categories</a>
                 <a href="/Customers">Customers</a>
+                <a href="/Suppliers">Suppliers</a>
+                <a href="/PurchaseOrders">Purchase Orders</a>
+                <a href="/Orders">Orders</a>
                 <a href="/CreateOrder">Create Order</a>
-            </nav>
+                <a href="/Invoices">Invoices</a>
+                <a href="/Search">AI Search</a>
+                
+                <a href="/Notifications" style="position: relative;">
+                    🔔 Notifications
+                    @await Component.InvokeAsync("NotificationBadge")
+                </a>
+                @if (Context.Session.GetString("Roles")?.Contains("Admin") == true)
+                {
+                    <a href="/AuditLogs">Audit Log</a>
+                    <a href="/Users">Users</a>
 
+                }
+
+            </nav> *@
+            <nav class="sidebar-nav">
+                @if (Context.Session.GetString("Roles")?.Contains("Admin") == true)
+                {
+                    <div class="sidebar-section-label">Overview</div>
+                    <a href="/Dashboard">📊 Dashboard</a>
+                }
+
+                <div class="sidebar-section-label">Catalog</div>
+                <a href="/Products">📦 Products</a>
+                <a href="/Categories">🏷️ Categories</a>
+
+                <div class="sidebar-section-label">People</div>
+                <a href="/Customers">🧑‍🤝‍🧑 Customers</a>
+                <a href="/Suppliers">🚚 Suppliers</a>
+
+                <div class="sidebar-section-label">Transactions</div>
+                <a href="/Orders">📄 Orders</a>
+                <a href="/PurchaseOrders">📥 Purchase Orders</a>
+                <a href="/Invoices">🧾 Invoices</a>
+
+                <div class="sidebar-section-label">Tools</div>
+                <a href="/Search">🤖 AI Search</a>
+                <a href="/Notifications" style="position: relative;">
+                    🔔 Notifications
+                    @await Component.InvokeAsync("NotificationBadge")
+                </a>
+
+                @if (Context.Session.GetString("Roles")?.Contains("Admin") == true)
+                {
+                    <div class="sidebar-section-label">Admin</div>
+                    <a href="/AuditLogs">📝 Audit Log</a>
+                    <a href="/Users">👤 Users</a>
+                }
+            </nav>
             <div class="sidebar-footer">
                 Signed in as <strong>@Context.Session.GetString("FullName")</strong><br />
                 <a href="/Logout">Log out</a>

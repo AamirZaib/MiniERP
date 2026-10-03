@@ -1,0 +1,25 @@
+﻿@* Pages/EditCategory.cshtml *@
+@page "{id:int}"
+@model MiniERP.Web.Pages.EditCategoryModel
+@{
+    ViewData["Title"] = "Edit Category";
+}
+
+<div class="page-header">
+    <h1>Edit Category</h1>
+</div>
+
+<div class="form-card" style="max-width: 400px;">
+    <form method="post">
+        <input type="hidden" asp-for="Id" />
+        <div class="mb-3">
+            <div class="form-label">Name</div>
+            <input asp-for="Category.Name" class="form-control w-100" />
+        </div>
+        <button type="submit" class="btn-gold w-100 mt-2">Save Changes</button>
+    </form>
+    @if (Model.Message != null)
+    {
+        <p style="color: var(--danger); font-size: 13px; margin-top: 10px;">@Model.Message</p>
+    }
+</div>

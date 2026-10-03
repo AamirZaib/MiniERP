@@ -11,7 +11,10 @@ namespace MiniERP.Application.Interfaces
         IGenericRepository<Order> Orders { get; }
         IGenericRepository<Customer> Customers { get; }
         IGenericRepository<Category> Categories { get; }
-
+        IGenericRepository<Supplier> Suppliers { get; }
+        IGenericRepository<PurchaseOrder> PurchaseOrders { get; }
+        IGenericRepository<Invoice> Invoices { get; }
+        IGenericRepository<Notification> Notifications { get; }
         Task<int> SaveChangesAsync(); // yeh actual database mein commit karta hai
     }
 }

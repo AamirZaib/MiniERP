@@ -15,12 +15,15 @@ namespace MiniERP.API.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IAiSearchService _aiSearchService;
         private readonly IRateLimitService _rateLimitService;
+        private readonly IAuditService _auditService;
 
-        public ProductsController(IUnitOfWork unitOfWork, IAiSearchService aiSearchService, IRateLimitService rateLimitService)
+        public ProductsController(IUnitOfWork unitOfWork, IAiSearchService aiSearchService, IRateLimitService rateLimitService, IAuditService auditService)
         {
             _unitOfWork = unitOfWork;
             _aiSearchService = aiSearchService;
-            _rateLimitService = rateLimitService;
+            _rateLimitService = rateLimitService; 
+            _auditService = auditService;
+
         }
 
         [HttpGet]
@@ -60,6 +63,11 @@ namespace MiniERP.API.Controllers
             await _unitOfWork.Products.AddAsync(product);
             await _unitOfWork.SaveChangesAsync();
 
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+            var userEmail = User.FindFirstValue(ClaimTypes.Email)!;
+
+            await _auditService.LogAsync(userId, userEmail, "ProductCreated", "Product", product.Id.ToString(),
+                $"Product '{product.Name}' created, Price: Rs.{product.Price}, Stock: {product.StockQuantity}");
             // category.Name yahan available hai kyunki hum ne category already load ki thi
             var response = new ProductResponse
             {
@@ -112,6 +120,35 @@ namespace MiniERP.API.Controllers
                 CategoryId = product.CategoryId,
                 CategoryName = product.Category?.Name ?? string.Empty
             };
+        }
+        // ProductsController.cs mein add karein
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,WarehouseStaff")]
+        public async Task<IActionResult> Update(int id, UpdateProductRequest request)
+        {
+            var product = await _unitOfWork.Products.GetByIdAsync(id);
+            if (product == null) return NotFound();
+
+            var category = await _unitOfWork.Categories.GetByIdAsync(request.CategoryId);
+            if (category == null)
+                return BadRequest(new { message = $"Category with Id {request.CategoryId} not found." });
+
+            product.Name = request.Name;
+            product.Description = request.Description;
+            product.Price = request.Price;
+            product.StockQuantity = request.StockQuantity;
+            product.LowStockThreshold = request.LowStockThreshold;
+            product.CategoryId = request.CategoryId;
+
+            _unitOfWork.Products.Update(product);
+            await _unitOfWork.SaveChangesAsync();
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+            var userEmail = User.FindFirstValue(ClaimTypes.Email)!;
+            await _auditService.LogAsync(userId, userEmail, "ProductUpdated", "Product", id.ToString(),
+                $"Product '{product.Name}' updated");
+
+            return NoContent();
         }
 
     }

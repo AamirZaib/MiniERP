@@ -25,7 +25,6 @@ namespace MiniERP.Web.Pages
         {
             var token = HttpContext.Session.GetString("Token");
             if (token == null) return RedirectToPage("/Index");
-
             Products = await _apiClient.GetProductsAsync(token);
             return Page();
         }

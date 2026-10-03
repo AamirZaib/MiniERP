@@ -18,7 +18,12 @@ namespace MiniERP.Infrastructure.Data
         public DbSet<Order> Orders => Set<Order>();
         public DbSet<OrderItem> OrderItems => Set<OrderItem>();
         public DbSet<AiSearchLog> AiSearchLogs => Set<AiSearchLog>();
-
+        public DbSet<Supplier> Suppliers => Set<Supplier>();
+        public DbSet<PurchaseOrder> PurchaseOrders => Set<PurchaseOrder>();
+        public DbSet<PurchaseOrderItem> PurchaseOrderItems => Set<PurchaseOrderItem>();
+        public DbSet<Invoice> Invoices => Set<Invoice>();
+        public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+        public DbSet<Notification> Notifications => Set<Notification>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder); // Identity tables ke liye zaroori — pehle call karein
@@ -29,6 +34,10 @@ namespace MiniERP.Infrastructure.Data
 
             modelBuilder.Entity<OrderItem>()
                 .Property(oi => oi.UnitPrice)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<PurchaseOrderItem>()
+                .Property(i => i.UnitCost)
                 .HasColumnType("decimal(18,2)");
 
             // Seed data — yeh part check karein
@@ -46,6 +55,11 @@ namespace MiniERP.Infrastructure.Data
             modelBuilder.Entity<Customer>().HasData(
                 new Customer { Id = 1, Name = "Ali Khan", Email = "ali@example.com" }
             );
+
+            modelBuilder.Entity<Supplier>().HasData(
+                new Supplier { Id = 1, Name = "Tech Distributors Pvt Ltd", Email = "sales@techdist.com", ContactPerson = "Usman Ali", Phone = "0300-1234567" }
+            );
+
         }
     }
 }

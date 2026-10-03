@@ -1,0 +1,36 @@
+﻿@* Pages/AuditLogs.cshtml *@
+@page
+@model MiniERP.Web.Pages.AuditLogsModel
+@{
+    ViewData["Title"] = "Audit Log";
+}
+
+<div class="page-header">
+    <h1>Audit Log</h1>
+</div>
+
+@if (Model.AccessDenied)
+{
+    <div style="padding: 14px 18px; border-radius: 4px; background: #FBEFDA; color: #92650F; font-size: 14px;">
+        Audit log is available to Admin users only.
+    </div>
+}
+else
+{
+    <table class="data-table">
+        <thead>
+            <tr><th>Time</th><th>User</th><th>Action</th><th>Details</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var log in Model.Logs ?? new())
+            {
+                <tr>
+                    <td style="white-space: nowrap; color: var(--text-muted); font-size: 13px;">@log.Timestamp.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@log.UserEmail</td>
+                    <td><span class="badge-status badge-ok">@log.Action</span></td>
+                    <td>@log.Details</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

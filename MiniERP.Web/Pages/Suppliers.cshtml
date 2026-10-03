@@ -1,0 +1,47 @@
+﻿@* Pages/Suppliers.cshtml *@
+@page
+@model MiniERP.Web.Pages.SuppliersModel
+@{
+    ViewData["Title"] = "Suppliers";
+}
+
+<div class="page-header">
+    <h1>Suppliers</h1>
+</div>
+
+<div style="display: flex; gap: 24px; flex-wrap: wrap;">
+    <div style="flex: 2; min-width: 300px;">
+        <table class="data-table">
+            <thead><tr><th>Name</th><th>Contact Person</th><th>Email</th><th>Phone</th><th>Action</th></tr></thead>
+            <tbody>
+                @foreach (var s in Model.Suppliers)
+                {
+                    <tr>
+                        <td>@s.Name</td>
+                        <td>@(s.ContactPerson ?? "—")</td>
+                        <td>@s.Email</td>
+                        <td>@(s.Phone ?? "—")</td>
+                        <td><a href="/EditSupplier/@s.Id" class="btn-gold" style="padding: 4px 12px; font-size: 13px; text-decoration: none; display: inline-block;">Edit</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div style="flex: 1; min-width: 260px;">
+        <div class="form-card">
+            <div class="form-label" style="margin-bottom: 12px;">Add New Supplier</div>
+            <form method="post">
+                <input asp-for="NewSupplier.Name" class="form-control w-100 mb-3" placeholder="Supplier name" />
+                <input asp-for="NewSupplier.ContactPerson" class="form-control w-100 mb-3" placeholder="Contact person" />
+                <input asp-for="NewSupplier.Email" class="form-control w-100 mb-3" placeholder="Email" />
+                <input asp-for="NewSupplier.Phone" class="form-control w-100 mb-3" placeholder="Phone (optional)" />
+                <button type="submit" class="btn-gold w-100">Add Supplier</button>
+            </form>
+            @if (Model.ErrorMessage != null)
+            {
+                <p style="color: var(--danger); font-size: 13px; margin-top: 10px;">@Model.ErrorMessage</p>
+            }
+        </div>
+    </div>
+</div>

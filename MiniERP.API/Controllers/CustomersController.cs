@@ -51,5 +51,21 @@ namespace MiniERP.API.Controllers
                 Phone = customer.Phone
             });
         }
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Sales")]
+        public async Task<IActionResult> Update(int id, UpdateCustomerRequest request)
+        {
+            var customer = await _unitOfWork.Customers.GetByIdAsync(id);
+            if (customer == null) return NotFound();
+
+            customer.Name = request.Name;
+            customer.Email = request.Email;
+            customer.Phone = request.Phone;
+
+            _unitOfWork.Customers.Update(customer);
+            await _unitOfWork.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }
