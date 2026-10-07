@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MiniERP.Application.DTOs;
+using MiniERP.Domain.Entities;
 using MiniERP.Web.Services;
 
 namespace MiniERP.Web.Pages
@@ -11,6 +12,8 @@ namespace MiniERP.Web.Pages
         private readonly ApiClientService _apiClient;
 
         public CreateOrderModel(ApiClientService apiClient) => _apiClient = apiClient;
+        public List<OrderResponse> Orders { get; set; } = new();
+
 
         [BindProperty]
         public int CustomerId { get; set; }
@@ -26,7 +29,9 @@ namespace MiniERP.Web.Pages
 
         public string? ResultMessage { get; set; }
         public bool Success { get; set; }
+        public string? Message { get; set; }
 
+        
         public async Task<IActionResult> OnGetAsync()
         {
             var token = HttpContext.Session.GetString("Token");
@@ -62,6 +67,18 @@ namespace MiniERP.Web.Pages
 
             var products = await _apiClient.GetProductsAsync(token);
             ProductOptions = products.Select(p => new SelectListItem($"{p.Name} — Stock: {p.StockQuantity}", p.Id.ToString())).ToList();
+        }
+
+        public async Task<IActionResult> OnPostUpdateStatusAsync(int orderId, string newStatus)
+        {
+            var token = HttpContext.Session.GetString("Token");
+            if (token == null) return RedirectToPage("/Index");
+
+            var (success, message) = await _apiClient.UpdateOrderStatusAsync(token, orderId, newStatus);
+            Message = success ? $"Order #{orderId} status updated to {newStatus}." : message;
+
+            Orders = (await _apiClient.GetOrdersAsync(token)).ToList();
+            return Page();
         }
     }
 }

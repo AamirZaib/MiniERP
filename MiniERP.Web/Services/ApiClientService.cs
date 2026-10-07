@@ -277,6 +277,36 @@ namespace MiniERP.Web.Services
             var response = await _httpClient.PutAsJsonAsync($"api/categories/{id}", request);
             return response.IsSuccessStatusCode;
         }
+        public async Task<(bool success, string? message)> UpdateOrderStatusAsync(string token, int orderId, string newStatus)
+        {
+            SetAuthHeader(token);
+            var response = await _httpClient.PatchAsJsonAsync($"api/orders/{orderId}/status", newStatus);
+            if (response.IsSuccessStatusCode) return (true, null);
+            var error = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>();
+            return (false, error?.GetValueOrDefault("message") ?? "Failed to update order status.");
+        }
+        public async Task<AiCommandProposal> ParseAiCommandAsync(string token, string command)
+        {
+            SetAuthHeader(token);
+            var response = await _httpClient.PostAsJsonAsync("api/aicommand/parse", new AiCommandRequest { Command = command });
+
+            if (response.StatusCode == System.Net.HttpStatusCode.TooManyRequests)
+            {
+                var errorBody = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>();
+                return new AiCommandProposal { Success = false, ErrorMessage = errorBody?.GetValueOrDefault("message") ?? "Rate limit reached." };
+            }
+
+            var result = await response.Content.ReadFromJsonAsync<AiCommandProposal>();
+            return result ?? new AiCommandProposal { Success = false, ErrorMessage = "Something went wrong." };
+        }
+
+        public async Task<(bool success, string message)> ExecuteAiCommandAsync(string token, AiCommandProposal proposal)
+        {
+            SetAuthHeader(token);
+            var response = await _httpClient.PostAsJsonAsync("api/aicommand/execute", proposal);
+            var body = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>();
+            return (response.IsSuccessStatusCode, body?.GetValueOrDefault("message") ?? "Failed.");
+        }
         public record RegisterResult(bool Success, string? ErrorMessage);
     }
 }

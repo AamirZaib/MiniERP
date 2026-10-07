@@ -33,5 +33,17 @@ namespace MiniERP.Web.Pages
             Orders = (await _apiClient.GetOrdersAsync(token)).ToList();
             return Page();
         }
+
+        public async Task<IActionResult> OnPostUpdateStatusAsync(int orderId, string newStatus)
+        {
+            var token = HttpContext.Session.GetString("Token");
+            if (token == null) return RedirectToPage("/Index");
+
+            var (success, message) = await _apiClient.UpdateOrderStatusAsync(token, orderId, newStatus);
+            Message = success ? $"Order #{orderId} status updated to {newStatus}." : message;
+
+            Orders = (await _apiClient.GetOrdersAsync(token)).ToList();
+            return Page();
+        }
     }
 }

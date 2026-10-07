@@ -28,13 +28,43 @@
             <tr>
                 <td>#@o.Id</td>
                 <td>@o.CustomerName</td>
-                <td><span class="badge-status badge-ok">@o.Status</span></td>
+                <td>
+                    @{
+                        var badgeClass = o.Status switch
+                        {
+                            "Shipped" => "badge-ok",
+                            "Cancelled" => "badge-warn",
+                            _ => "badge-ok"
+                        };
+                    }
+                    <span class="badge-status @badgeClass">@o.Status</span>
+                </td>
                 <td>Rs. @o.TotalAmount.ToString("N0")</td>
                 <td>@o.OrderDate.ToString("yyyy-MM-dd")</td>
                 <td>
-                    <form method="post" asp-page-handler="GenerateInvoice" asp-route-orderId="@o.Id" style="display:inline;">
-                        <button type="submit" class="btn-gold" style="padding: 4px 12px; font-size: 13px;">Generate Invoice</button>
-                    </form>
+                    <div class="action-buttons">
+                        @if (o.Status == "Pending")
+                        {
+                            <form method="post" asp-page-handler="UpdateStatus" asp-route-orderId="@o.Id" asp-route-newStatus="Processing">
+                                <button type="submit" class="btn-sm btn-primary">Mark Processing</button>
+                            </form>
+                            <form method="post" asp-page-handler="UpdateStatus" asp-route-orderId="@o.Id" asp-route-newStatus="Cancelled">
+                                <button type="submit" class="btn-sm btn-outline-danger">Cancel</button>
+                            </form>
+                        }
+                        else if (o.Status == "Processing")
+                        {
+                            <form method="post" asp-page-handler="UpdateStatus" asp-route-orderId="@o.Id" asp-route-newStatus="Shipped">
+                                <button type="submit" class="btn-sm btn-primary">Mark Shipped</button>
+                            </form>
+                            <form method="post" asp-page-handler="UpdateStatus" asp-route-orderId="@o.Id" asp-route-newStatus="Cancelled">
+                                <button type="submit" class="btn-sm btn-outline-danger">Cancel</button>
+                            </form>
+                        }
+                        <form method="post" asp-page-handler="GenerateInvoice" asp-route-orderId="@o.Id">
+                            <button type="submit" class="btn-sm btn-neutral">Invoice</button>
+                        </form>
+                    </div>
                 </td>
             </tr>
         }

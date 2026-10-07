@@ -64,6 +64,7 @@ builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
 builder.Services.AddScoped<IInvoiceService, InvoiceService>();
 builder.Services.AddScoped<IAuditService, AuditService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddHttpClient<IAiCommandService, AiCommandService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

@@ -1,0 +1,56 @@
+﻿@* Pages/AiCommand.cshtml *@
+@page
+@model MiniERP.Web.Pages.AiCommandModel
+@using System.Text.Json
+@{
+    ViewData["Title"] = "AI Command";
+}
+
+<div class="page-header">
+    <h1>AI Command</h1>
+</div>
+
+@if (Model.ResultMessage != null)
+{
+    <div class="ai-insight-box" style="background: #E2F4EC; border-left-color: var(--success);">
+        <div class="ai-insight-content"><div class="ai-insight-text">@Model.ResultMessage</div></div>
+    </div>
+}
+
+<div class="form-card" style="max-width: 600px;">
+    <form method="post" asp-page-handler="Parse">
+        <div class="form-label" style="margin-bottom: 8px;">Describe what you want to do</div>
+        <textarea asp-for="Command" class="form-control w-100" rows="3"
+                  placeholder="e.g. Create an order for Ali Khan, 2 Mouse and 1 Laptop"></textarea>
+        <button type="submit" class="btn-gold w-100 mt-2">Ask AI</button>
+    </form>
+
+    @if (Model.Proposal != null)
+    {
+        @if (!Model.Proposal.Success)
+        {
+            <div class="ai-insight-box" style="margin-top: 16px;">
+                <div class="ai-insight-icon">🤖</div>
+                <div class="ai-insight-content">
+                    <div class="ai-insight-label">Could not process</div>
+                    <div class="ai-insight-text">@Model.Proposal.ErrorMessage</div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="ai-insight-box" style="margin-top: 16px;">
+                <div class="ai-insight-icon">🤖</div>
+                <div class="ai-insight-content">
+                    <div class="ai-insight-label">Review before confirming</div>
+                    <div class="ai-insight-text">@Model.Proposal.Summary</div>
+                </div>
+            </div>
+
+            <form method="post" asp-page-handler="Confirm" style="margin-top: 12px;">
+                <input type="hidden" name="ProposalJson" value="@JsonSerializer.Serialize(Model.Proposal)" />
+                <button type="submit" class="btn-gold">Confirm &amp; Create</button>
+            </form>
+        }
+    }
+</div>
