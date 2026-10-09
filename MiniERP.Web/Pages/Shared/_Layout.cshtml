@@ -62,10 +62,14 @@
                 <div class="sidebar-section-label">Tools</div>
                 <a href="/Search">🔍 AI Search</a>
                 <a href="/AiCommand">🤖 AI Command</a>
-                <a href="/Notifications" style="position: relative;">
-                    🔔 Notifications
-                    @await Component.InvokeAsync("NotificationBadge")
-                </a>
+                @if (Context.Session.GetString("Roles")?.Contains("Admin") == true)
+                {
+                    <a href="/Notifications" style="position: relative;">
+                        🔔 Notifications
+                        @await Component.InvokeAsync("NotificationBadge")
+                    </a>
+                }
+               
 
                 @if (Context.Session.GetString("Roles")?.Contains("Admin") == true)
                 {
