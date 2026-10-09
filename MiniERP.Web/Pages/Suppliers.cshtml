@@ -11,21 +11,32 @@
 
 <div style="display: flex; gap: 24px; flex-wrap: wrap;">
     <div style="flex: 2; min-width: 300px;">
-        <table class="data-table">
-            <thead><tr><th>Name</th><th>Contact Person</th><th>Email</th><th>Phone</th><th>Action</th></tr></thead>
-            <tbody>
-                @foreach (var s in Model.Suppliers)
-                {
-                    <tr>
-                        <td>@s.Name</td>
-                        <td>@(s.ContactPerson ?? "—")</td>
-                        <td>@s.Email</td>
-                        <td>@(s.Phone ?? "—")</td>
-                        <td><a href="/EditSupplier/@s.Id" class="btn-gold" style="padding: 4px 12px; font-size: 13px; text-decoration: none; display: inline-block;">Edit</a></td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+
+        @if (!Model.Suppliers.Any())
+        {
+            <div class="empty-state">
+                <div class="empty-icon">🚚</div>
+                <div class="empty-title">No supplier yet</div>
+            </div>
+        }
+        else
+        {
+            <table class="data-table">
+                <thead><tr><th>Name</th><th>Contact Person</th><th>Email</th><th>Phone</th><th>Action</th></tr></thead>
+                <tbody>
+                    @foreach (var s in Model.Suppliers)
+                    {
+                        <tr>
+                            <td>@s.Name</td>
+                            <td>@(s.ContactPerson ?? "—")</td>
+                            <td>@s.Email</td>
+                            <td>@(s.Phone ?? "—")</td>
+                            <td><a href="/EditSupplier/@s.Id" class="btn-gold" style="padding: 4px 12px; font-size: 13px; text-decoration: none; display: inline-block;">Edit</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
     </div>
 
     <div style="flex: 1; min-width: 260px;">

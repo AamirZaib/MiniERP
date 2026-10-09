@@ -46,38 +46,48 @@
         </div>
     }
 </div>
+@if (!Model.PurchaseOrders.Any())
+{
+    <div class="empty-state">
+        <div class="empty-icon">📥</div>
+        <div class="empty-title">No purchase orders yet</div>
+    </div>
+}
+else
+{
+    <table class="data-table">
+        <thead>
+            <tr><th>PO #</th><th>Supplier</th><th>Status</th><th>Total</th><th>Date</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var po in Model.PurchaseOrders)
+            {
+                <tr>
+                    <td>#@po.Id</td>
+                    <td>@po.SupplierName</td>
+                    <td>
+                        @if (po.Status == "Received")
+                        {
+                            <span class="badge-status badge-ok">Received</span>
+                        }
+                        else
+                        {
+                            <span class="badge-status badge-warn">@po.Status</span>
+                        }
+                    </td>
+                    <td>Rs. @po.TotalAmount.ToString("N0")</td>
+                    <td>@po.OrderDate.ToString("yyyy-MM-dd")</td>
+                    <td>
+                        @if (po.Status != "Received")
+                        {
+                            <form method="post" asp-page-handler="Receive" asp-route-id="@po.Id" style="display:inline;">
+                                <button type="submit" class="btn-gold" style="padding: 4px 12px; font-size: 13px;">Mark Received</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
-<table class="data-table">
-    <thead>
-        <tr><th>PO #</th><th>Supplier</th><th>Status</th><th>Total</th><th>Date</th><th>Action</th></tr>
-    </thead>
-    <tbody>
-        @foreach (var po in Model.PurchaseOrders)
-        {
-            <tr>
-                <td>#@po.Id</td>
-                <td>@po.SupplierName</td>
-                <td>
-                    @if (po.Status == "Received")
-                    {
-                        <span class="badge-status badge-ok">Received</span>
-                    }
-                    else
-                    {
-                        <span class="badge-status badge-warn">@po.Status</span>
-                    }
-                </td>
-                <td>Rs. @po.TotalAmount.ToString("N0")</td>
-                <td>@po.OrderDate.ToString("yyyy-MM-dd")</td>
-                <td>
-                    @if (po.Status != "Received")
-                    {
-                        <form method="post" asp-page-handler="Receive" asp-route-id="@po.Id" style="display:inline;">
-                            <button type="submit" class="btn-gold" style="padding: 4px 12px; font-size: 13px;">Mark Received</button>
-                        </form>
-                    }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>

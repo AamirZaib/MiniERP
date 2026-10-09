@@ -17,56 +17,66 @@
     </div>
 }
 
-
-<table class="data-table">
-    <thead>
-        <tr><th>Order #</th><th>Customer</th><th>Status</th><th>Total</th><th>Date</th><th>Action</th></tr>
-    </thead>
-    <tbody>
-        @foreach (var o in Model.Orders)
-        {
-            <tr>
-                <td>#@o.Id</td>
-                <td>@o.CustomerName</td>
-                <td>
-                    @{
-                        var badgeClass = o.Status switch
-                        {
-                            "Shipped" => "badge-ok",
-                            "Cancelled" => "badge-warn",
-                            _ => "badge-ok"
-                        };
-                    }
-                    <span class="badge-status @badgeClass">@o.Status</span>
-                </td>
-                <td>Rs. @o.TotalAmount.ToString("N0")</td>
-                <td>@o.OrderDate.ToString("yyyy-MM-dd")</td>
-                <td>
-                    <div class="action-buttons">
-                        @if (o.Status == "Pending")
-                        {
-                            <form method="post" asp-page-handler="UpdateStatus" asp-route-orderId="@o.Id" asp-route-newStatus="Processing">
-                                <button type="submit" class="btn-sm btn-primary">Mark Processing</button>
-                            </form>
-                            <form method="post" asp-page-handler="UpdateStatus" asp-route-orderId="@o.Id" asp-route-newStatus="Cancelled">
-                                <button type="submit" class="btn-sm btn-outline-danger">Cancel</button>
-                            </form>
+@if (!Model.Orders.Any())
+{
+    <div class="empty-state">
+        <div class="empty-icon">📄</div>
+        <div class="empty-title">No orders yet</div>
+        <div>Orders you create will appear here. <a href="/CreateOrder">Create your first order</a></div>
+    </div>
+}
+else
+{
+    <table class="data-table">
+        <thead>
+            <tr><th>Order #</th><th>Customer</th><th>Status</th><th>Total</th><th>Date</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var o in Model.Orders)
+            {
+                <tr>
+                    <td>#@o.Id</td>
+                    <td>@o.CustomerName</td>
+                    <td>
+                        @{
+                            var badgeClass = o.Status switch
+                            {
+                                "Shipped" => "badge-ok",
+                                "Cancelled" => "badge-warn",
+                                _ => "badge-ok"
+                            };
                         }
-                        else if (o.Status == "Processing")
-                        {
-                            <form method="post" asp-page-handler="UpdateStatus" asp-route-orderId="@o.Id" asp-route-newStatus="Shipped">
-                                <button type="submit" class="btn-sm btn-primary">Mark Shipped</button>
+                        <span class="badge-status @badgeClass">@o.Status</span>
+                    </td>
+                    <td>Rs. @o.TotalAmount.ToString("N0")</td>
+                    <td>@o.OrderDate.ToString("yyyy-MM-dd")</td>
+                    <td>
+                        <div class="action-buttons">
+                            @if (o.Status == "Pending")
+                            {
+                                <form method="post" asp-page-handler="UpdateStatus" asp-route-orderId="@o.Id" asp-route-newStatus="Processing">
+                                    <button type="submit" class="btn-sm btn-primary">Mark Processing</button>
+                                </form>
+                                <form method="post" asp-page-handler="UpdateStatus" asp-route-orderId="@o.Id" asp-route-newStatus="Cancelled">
+                                    <button type="submit" class="btn-sm btn-outline-danger">Cancel</button>
+                                </form>
+                            }
+                            else if (o.Status == "Processing")
+                            {
+                                <form method="post" asp-page-handler="UpdateStatus" asp-route-orderId="@o.Id" asp-route-newStatus="Shipped">
+                                    <button type="submit" class="btn-sm btn-primary">Mark Shipped</button>
+                                </form>
+                                <form method="post" asp-page-handler="UpdateStatus" asp-route-orderId="@o.Id" asp-route-newStatus="Cancelled">
+                                    <button type="submit" class="btn-sm btn-outline-danger">Cancel</button>
+                                </form>
+                            }
+                            <form method="post" asp-page-handler="GenerateInvoice" asp-route-orderId="@o.Id">
+                                <button type="submit" class="btn-sm btn-neutral">Invoice</button>
                             </form>
-                            <form method="post" asp-page-handler="UpdateStatus" asp-route-orderId="@o.Id" asp-route-newStatus="Cancelled">
-                                <button type="submit" class="btn-sm btn-outline-danger">Cancel</button>
-                            </form>
-                        }
-                        <form method="post" asp-page-handler="GenerateInvoice" asp-route-orderId="@o.Id">
-                            <button type="submit" class="btn-sm btn-neutral">Invoice</button>
-                        </form>
-                    </div>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

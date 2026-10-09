@@ -410,3 +410,28 @@ body {
         .btn-sm.btn-neutral:hover {
             background: #F5F6F8;
         }
+
+.empty-state {
+    text-align: center;
+    padding: 44px 20px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-muted);
+}
+
+    .empty-state .empty-icon {
+        font-size: 32px;
+        margin-bottom: 8px;
+    }
+
+    .empty-state .empty-title {
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 4px;
+    }
+
+    .empty-state a {
+        color: var(--navy);
+        font-weight: 600;
+    }

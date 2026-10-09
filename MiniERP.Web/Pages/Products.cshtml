@@ -43,31 +43,41 @@
     <h1>Products</h1>
     <a href="/CreateProduct" class="btn-gold" style="text-decoration: none;">+ Add Product</a>
 </div>
-
-<table class="data-table">
-    <thead>
-        <tr><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th>Action</th></tr>
-    </thead>
-    <tbody>
-        @foreach (var p in Model.Products)
-        {
-            <tr>
-                <td style="font-weight: 500;">@p.Name</td>
-                <td style="color: var(--text-muted);">@p.CategoryName</td>
-                <td>Rs. @p.Price.ToString("N0")</td>
-                <td>@p.StockQuantity</td>
-                <td>
-                    @if (p.IsLowStock)
-                    {
-                        <span class="badge-status badge-warn">Low Stock</span>
-                    }
-                    else
-                    {
-                        <span class="badge-status badge-ok">In Stock</span>
-                    }
-                </td>
-                <td><a href="/EditProduct/@p.Id" class="btn-gold" style="padding: 4px 12px; font-size: 13px; text-decoration: none; display: inline-block;">Edit</a></td>
-            </tr>
-        }
-    </tbody>
-</table>
+@if (!Model.Products.Any())
+{
+    <div class="empty-state">
+        <div class="empty-icon">📦</div>
+        <div class="empty-title">No products yet</div>
+        <div>product you create will appear here. <a href="/CreateProduct">Create your first product</a></div>
+    </div>
+}
+else
+{
+    <table class="data-table">
+        <thead>
+            <tr><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model.Products)
+            {
+                <tr>
+                    <td style="font-weight: 500;">@p.Name</td>
+                    <td style="color: var(--text-muted);">@p.CategoryName</td>
+                    <td>Rs. @p.Price.ToString("N0")</td>
+                    <td>@p.StockQuantity</td>
+                    <td>
+                        @if (p.IsLowStock)
+                        {
+                            <span class="badge-status badge-warn">Low Stock</span>
+                        }
+                        else
+                        {
+                            <span class="badge-status badge-ok">In Stock</span>
+                        }
+                    </td>
+                    <td><a href="/EditProduct/@p.Id" class="btn-gold" style="padding: 4px 12px; font-size: 13px; text-decoration: none; display: inline-block;">Edit</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

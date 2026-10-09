@@ -11,17 +11,31 @@
 
 <div style="display: flex; gap: 24px; flex-wrap: wrap;">
     <div style="flex: 2; min-width: 300px;">
-        <table class="data-table">
-            <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Action</th></tr></thead>
-            <tbody>
-                @foreach (var c in Model.Customers)
-                {
-                    <tr><td>@c.Name</td><td>@c.Email</td><td>@(c.Phone ?? "—")</td>
-                        <td><a href="/EditCustomer/@c.Id" class="btn-gold" style="padding: 4px 12px; font-size: 13px; text-decoration: none; display: inline-block;">Edit</a></td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        @if (!Model.Customers.Any())
+        {
+            <div class="empty-state">
+                <div class="empty-icon">🧑‍🤝‍🧑</div>
+                <div class="empty-title">No customer yet</div>
+            </div>
+        }
+        else
+        {
+            <table class="data-table">
+                <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Action</th></tr></thead>
+                <tbody>
+                    @foreach (var c in Model.Customers)
+                    {
+                        <tr>
+                            <td>@c.Name</td>
+                            <td>@c.Email</td>
+                            <td>@(c.Phone ?? "—")</td>
+                            <td><a href="/EditCustomer/@c.Id" class="btn-gold" style="padding: 4px 12px; font-size: 13px; text-decoration: none; display: inline-block;">Edit</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+       
     </div>
 
     <div style="flex: 1; min-width: 260px;">
