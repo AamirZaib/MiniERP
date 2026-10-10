@@ -28,7 +28,9 @@ namespace MiniERP.Infrastructure.AI
             var customers = (await _unitOfWork.Customers.GetAllAsync()).ToList();
             var orders = (await _unitOfWork.Orders.GetAllWithIncludesAsync(o => o.Customer, o => o.Items)).ToList();
             var categories = (await _unitOfWork.Categories.GetAllAsync()).ToList();
-
+            var suppliers = (await _unitOfWork.Suppliers.GetAllAsync()).ToList();
+            var purchaseOrders = (await _unitOfWork.PurchaseOrders.GetAllWithIncludesAsync(po => po.Supplier, po => po.Items)).ToList();
+            var invoices = (await _unitOfWork.Invoices.GetAllAsync()).ToList();
             // Har entity ka compact summary banate hain AI ke liye
             var sb = new StringBuilder();
 
@@ -48,7 +50,19 @@ namespace MiniERP.Infrastructure.AI
             foreach (var c in categories)
                 sb.AppendLine($"ID:{c.Id} | {c.Name}");
 
-            var prompt = $@"You are a search assistant for an ERP system with four entity types: products, customers, orders, categories.
+            sb.AppendLine("\nSUPPLIERS:");
+            foreach (var s in suppliers)
+                sb.AppendLine($"ID:{s.Id} | {s.Name} | Contact:{s.ContactPerson ?? "N/A"} | {s.Email}");
+
+            sb.AppendLine("\nPURCHASE ORDERS:");
+            foreach (var po in purchaseOrders)
+                sb.AppendLine($"ID:{po.Id} | Supplier:{po.Supplier?.Name} | Status:{po.Status} | Total:Rs.{po.TotalAmount} | Date:{po.OrderDate:yyyy-MM-dd}");
+
+            sb.AppendLine("\nINVOICES:");
+            foreach (var i in invoices)
+                sb.AppendLine($"ID:{i.Id} | {i.InvoiceNumber} | OrderId:{i.OrderId} | Date:{i.IssuedDate:yyyy-MM-dd}");
+
+            var prompt = $@"You are a search assistant for an ERP system with seven entity types: products, customers, orders, categories, suppliers, purchaseorders, invoices.
 
 Data:
 {sb}
@@ -60,7 +74,7 @@ Determine which ONE entity type the user is most likely searching for, and which
 Return ONLY a JSON object (no other text) in this exact format:
 {{""entityType"": ""products"", ""ids"": [1, 2], ""explanation"": ""short explanation""}}
 
-entityType must be one of: products, customers, orders, categories, none
+entityType must be one of: products, customers, orders, categories, suppliers, purchaseorders, invoices, none
 If nothing matches or the query is unclear, use ""none"" with empty ids.";
 
             var requestBody = new
@@ -161,6 +175,44 @@ If nothing matches or the query is unclear, use ""none"" with empty ids.";
                     {
                         Id = c.Id,
                         Name = c.Name
+                    }).ToList();
+                    break;
+
+                case "suppliers":
+                    result.Suppliers = suppliers.Where(s => ids.Contains(s.Id)).Select(s => new SupplierResponse
+                    {
+                        Id = s.Id,
+                        Name = s.Name,
+                        ContactPerson = s.ContactPerson,
+                        Email = s.Email,
+                        Phone = s.Phone
+                    }).ToList();
+                    break;
+
+                case "purchaseorders":
+                    result.PurchaseOrders = purchaseOrders.Where(po => ids.Contains(po.Id)).Select(po => new PurchaseOrderResponse
+                    {
+                        Id = po.Id,
+                        OrderDate = po.OrderDate,
+                        Status = po.Status.ToString(),
+                        SupplierName = po.Supplier?.Name ?? "Unknown",
+                        TotalAmount = po.TotalAmount,
+                        Items = po.Items.Select(i => new PurchaseOrderItemResponse
+                        {
+                            ProductName = products.FirstOrDefault(p => p.Id == i.ProductId)?.Name ?? "Unknown",
+                            Quantity = i.Quantity,
+                            UnitCost = i.UnitCost
+                        }).ToList()
+                    }).ToList();
+                    break;
+
+                case "invoices":
+                    result.Invoices = invoices.Where(i => ids.Contains(i.Id)).Select(i => new InvoiceResponse
+                    {
+                        Id = i.Id,
+                        InvoiceNumber = i.InvoiceNumber,
+                        IssuedDate = i.IssuedDate,
+                        OrderId = i.OrderId
                     }).ToList();
                     break;
             }

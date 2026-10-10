@@ -14,7 +14,11 @@
            placeholder="Try: 'orders from Ali Khan' or 'low stock electronics' or 'customers named Ali'" />
     <button type="submit" class="btn-gold">Search</button>
 </form>
-
+<p style="font-size: 13px; color: var(--text-muted); margin: -8px 0 20px;">
+    Searches products, customers, orders, categories, suppliers, purchase orders and invoices.
+    Try: <em>"pending purchase orders"</em>, <em>"supplier Tech Distributors"</em>, <em>"invoices for Ali Khan"</em>.
+    Limit: 5 AI searches per user per day.
+</p>
 @if (Model.Result != null)
 {
     <div class="ai-insight-box">
@@ -80,8 +84,48 @@
             </tbody>
         </table>
     }
+    @if (Model.Result.Suppliers.Any())
+    {
+        <h5>Suppliers</h5>
+        <table class="data-table" style="margin-bottom: 24px;">
+            <thead><tr><th>Name</th><th>Contact</th><th>Email</th><th>Phone</th></tr></thead>
+            <tbody>
+                @foreach (var s in Model.Result.Suppliers)
+                {
+                    <tr><td>@s.Name</td><td>@(s.ContactPerson ?? "—")</td><td>@s.Email</td><td>@(s.Phone ?? "—")</td></tr>
+                }
+            </tbody>
+        </table>
+    }
 
-    @if (!Model.Result.Products.Any() && !Model.Result.Customers.Any() && !Model.Result.Orders.Any() && !Model.Result.Categories.Any())
+    @if (Model.Result.PurchaseOrders.Any())
+    {
+        <h5>Purchase Orders</h5>
+        <table class="data-table" style="margin-bottom: 24px;">
+            <thead><tr><th>PO #</th><th>Supplier</th><th>Status</th><th>Total</th><th>Date</th></tr></thead>
+            <tbody>
+                @foreach (var po in Model.Result.PurchaseOrders)
+                {
+                    <tr><td>#@po.Id</td><td>@po.SupplierName</td><td>@po.Status</td><td>Rs. @po.TotalAmount.ToString("N0")</td><td>@po.OrderDate.ToString("yyyy-MM-dd")</td></tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    @if (Model.Result.Invoices.Any())
+    {
+        <h5>Invoices</h5>
+        <table class="data-table" style="margin-bottom: 24px;">
+            <thead><tr><th>Invoice #</th><th>Order</th><th>Issued</th></tr></thead>
+            <tbody>
+                @foreach (var i in Model.Result.Invoices)
+                {
+                    <tr><td>@i.InvoiceNumber</td><td>#@i.OrderId</td><td>@i.IssuedDate.ToString("yyyy-MM-dd")</td></tr>
+                }
+            </tbody>
+        </table>
+    }
+    @if (!Model.Result.Products.Any() && !Model.Result.Customers.Any() && !Model.Result.Orders.Any() && !Model.Result.Categories.Any() && !Model.Result.Suppliers.Any() && !Model.Result.PurchaseOrders.Any() && !Model.Result.Invoices.Any())
     {
         <p style="color: var(--text-muted);">No matches found.</p>
     }

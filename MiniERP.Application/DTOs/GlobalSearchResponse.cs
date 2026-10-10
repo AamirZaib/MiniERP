@@ -12,5 +12,8 @@ namespace MiniERP.Application.DTOs
         public List<CustomerResponse> Customers { get; set; } = new();
         public List<OrderResponse> Orders { get; set; } = new();
         public List<CategoryResponse> Categories { get; set; } = new();
+        public List<SupplierResponse> Suppliers { get; set; } = new();
+        public List<PurchaseOrderResponse> PurchaseOrders { get; set; } = new();
+        public List<InvoiceResponse> Invoices { get; set; } = new();
     }
 }
