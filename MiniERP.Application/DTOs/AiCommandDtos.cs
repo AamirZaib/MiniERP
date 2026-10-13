@@ -28,5 +28,14 @@ namespace MiniERP.Application.DTOs
         public int? CustomerId { get; set; }
         public string? CustomerName { get; set; }
         public List<AiCommandItemProposal> Items { get; set; } = new();
+        public string? Name { get; set; }
+        public string? Email { get; set; }
+        public string? Phone { get; set; }
+        public string? ContactPerson { get; set; }
+        public decimal? Price { get; set; }
+        public int? StockQuantity { get; set; }
+        public int? LowStockThreshold { get; set; }
+        public int? CategoryId { get; set; }
+        public string? CategoryName { get; set; }
     }
 }
